@@ -1,3 +1,7 @@
+![GitHub](https://img.shields.io/github/license/maxwolf8852/DetExecutor?style=plastic)
+[![PyPI version](https://badge.fury.io/py/det_executor.svg)](https://badge.fury.io/py/det_executor)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/det_executor?style=plastic)
+
 # DetExecutor
 Python package with latest versions of YOLO architecture for training and inference
 ## Install
