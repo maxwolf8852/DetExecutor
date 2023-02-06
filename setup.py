@@ -4,7 +4,7 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requirements = ['pyyaml', 'opencv-python', 'torch', 'torchvision', 'requests', 'wget', 'tqdm', 'ultralytics']
+requirements = ['pyyaml', 'opencv-python', 'torch', 'torchvision', 'requests', 'wget', 'tqdm', 'ultralytics', 'black', 'colorama', 'pthflops']
 
 setuptools.setup(
     name="det_executor",
