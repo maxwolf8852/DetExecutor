@@ -9,7 +9,7 @@ requirements = ['pyyaml', 'opencv-python', 'torch', 'torchvision',
 
 setuptools.setup(
     name="det_executor",
-    version="0.0.4",
+    version="0.0.5",
     author="Maxim Volkovskiy",
     author_email="maxwolf8852@gmail.com",
     description="Python package with latest versions of YOLO architecture for training and inference",
