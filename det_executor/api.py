@@ -1,3 +1,7 @@
+from .utils import load_script_model, non_max_suppression, SCRIPT_16, SCRIPT_16_TINY
+from .models.experimental import attempt_load
+from pthflops import count_ops
+import torch
 import time
 from collections import namedtuple
 import os
@@ -10,12 +14,6 @@ import numpy as np
 from colorama import Fore, init
 
 init(autoreset=True)
-
-import torch
-from pthflops import count_ops
-
-from .models.experimental import attempt_load
-from .utils import load_script_model, non_max_suppression, SCRIPT_16, SCRIPT_16_TINY
 
 
 def blockPrint():
@@ -54,9 +52,11 @@ def count_parameters(model):
 
 
 class DetExecutor:
-    def __init__(self, arch: str, device='cuda:0', half=None):
+    def __init__(self, arch: str, device='cuda:0', half=None, cache_dir=None):
         self._arch: ModelArch = arches[arch]
-        self._weights = f'{pathlib.Path(__file__).parent.resolve()}/{arch}.pt'
+        if cache_dir is None:
+            cache_dir = f'{pathlib.Path(__file__).parent.resolve()}'
+        self._weights = f'{cache_dir}/{arch}.pt'
         self._model = None
         cpu = device.lower() == 'cpu'
         cuda = not cpu and torch.cuda.is_available()
@@ -72,12 +72,15 @@ class DetExecutor:
         try:
             if self._arch.module == 'yolov7_package':
                 if not self._arch.traced:
-                    sys.path.append(os.path.join(os.path.dirname(__file__), ""))
-                    self._model = attempt_load(self._weights, map_location=self._device)
+                    sys.path.append(os.path.join(
+                        os.path.dirname(__file__), ""))
+                    self._model = attempt_load(
+                        self._weights, map_location=self._device)
                 else:  # load traced version
                     if not os.path.isfile(self._weights):
                         load_script_model(self._arch.load_link, self._weights)
-                    self._model = torch.jit.load(self._weights, map_location=self._device).float().eval()
+                    self._model = torch.jit.load(
+                        self._weights, map_location=self._device).float().eval()
 
                 # print()
 
@@ -89,10 +92,12 @@ class DetExecutor:
                 self._model = YOLO(model=self._arch.load_link)
         except Exception as e:
             enablePrint()
-            print(f'{Fore.RED}ERROR {{{e}}} {Fore.RESET}[{time.perf_counter() - start}]')
+            print(
+                f'{Fore.RED}ERROR {{{e}}} {Fore.RESET}[{time.perf_counter() - start}]')
         else:
             enablePrint()
-            print(f'{Fore.GREEN}SUCCESS {Fore.RESET}[{time.perf_counter() - start}]')
+            print(
+                f'{Fore.GREEN}SUCCESS {Fore.RESET}[{time.perf_counter() - start}]')
 
         """try:
             print(count_parameters(self._model.model))
@@ -106,7 +111,8 @@ class DetExecutor:
     def predict(self,
                 images: np.ndarray | list[np.ndarray],
                 conf_thres=0.25,
-                iou_thres=0.3):
+                iou_thres=0.3,
+                multi_label=False):
         if type(images) != list:
             x = [images]
         else:
@@ -134,7 +140,7 @@ class DetExecutor:
                 y = torch.stack(y)
                 pred = self._model(y, )[0]
                 pred = non_max_suppression(pred, conf_thres, iou_thres, classes=None,
-                                           agnostic=False)
+                                           agnostic=False, multi_label=multi_label)
 
                 for i, det in enumerate(pred):  # detections per image
                     local_classes = []
@@ -147,7 +153,8 @@ class DetExecutor:
 
                         for *xyxy, conf, cls in reversed(det):
                             coords = torch.tensor(xyxy).tolist()
-                            xyxy_scaled = [coords[0] * dy, coords[1] * dx, coords[2] * dy, coords[3] * dx]
+                            xyxy_scaled = [coords[0] * dy, coords[1]
+                                           * dx, coords[2] * dy, coords[3] * dx]
                             local_classes.append(int(cls.cpu().item()))
                             local_boxes.append(xyxy_scaled)
                             local_confs.append(float(conf.cpu().item()))
