@@ -1,0 +1,13 @@
+pyyaml
+opencv-python
+torch
+torchvision
+requests
+wget
+tqdm
+ultralytics
+black
+colorama
+pthflops
+transformers
+imageio[av]

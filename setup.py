@@ -4,12 +4,24 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requirements = ['pyyaml', 'opencv-python', 'torch', 'torchvision',
-                'requests', 'wget', 'tqdm', 'ultralytics', 'black', 'colorama', 'pthflops']
+requirements = [
+    "pyyaml",
+    "opencv-python",
+    "torch",
+    "torchvision",
+    "requests",
+    "wget",
+    "tqdm",
+    "ultralytics",
+    "black",
+    "colorama",
+    "transformers",
+    "imageio[av]",
+]
 
 setuptools.setup(
     name="det_executor",
-    version="0.0.5",
+    version="0.0.6",
     author="Maxim Volkovskiy",
     author_email="maxwolf8852@gmail.com",
     description="Python package with latest versions of YOLO architecture for training and inference",
@@ -23,5 +35,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )
