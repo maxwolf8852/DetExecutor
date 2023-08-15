@@ -21,7 +21,7 @@ requirements = [
 
 setuptools.setup(
     name="det_executor",
-    version="0.0.6",
+    version="0.0.7",
     author="Maxim Volkovskiy",
     author_email="maxwolf8852@gmail.com",
     description="Python package with latest versions of YOLO architecture for training and inference",
