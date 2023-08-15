@@ -1,5 +1,3 @@
-from typing import Any, Self
-
 from .base import BaseExecutor
 from .arches import ModelArch, arches_list
 from .v7 import Yolov7Executor
